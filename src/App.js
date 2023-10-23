@@ -34,19 +34,29 @@ function Form() {
 			packed: false,
 			id: Date.now(),
 		};
-		console.log(newItem);
+		console.log(newItem); //just to check what we are submitting to form. we can take this out of the form and display in the list. we will learn later.
 
 		setDescp('');
 		setQuantity(1);
 	}
 
 	return (
-		<div className="add-form" onSubmit={handleSubmit}>
+		<form className="add-form" onSubmit={handleSubmit}>
 			<h3>What do you want for your 😍 trip? </h3>
 			<select
 				value={quantity}
 				onChange={(e) => setQuantity(Number(e.target.value))}
 			>
+				{/* Array.from takes 2 params -> 1st iterable thing 2nd a cb. 
+				To create an arr of range of numbers:
+				const range = Array.from({ length: 5 }, (_, index) => index + 1); // Generates an array of numbers from 1 to 5: [1, 2, 3, 4, 5]
+				
+				{ length: 5 } is an object, not an array. However, in JavaScript, you can use this object in conjunction with Array.from() to create an array of a specified length. When you pass an object with a length property to Array.from(), it creates a new array with the specified length, and you can also provide a callback function to generate the values for each element in the array. 
+
+				(_, index) is a callback function that's being used inside the Array.from() method. It's a common convention to use an underscore (_) as a placeholder for a parameter you don't intend to use. In this case, you are not using the first parameter (which represents the value of each element), but you are using the second parameter, which represents the index of each element within the array.
+				
+				
+*/}
 				{Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
 					<option value={num} key={num}>
 						{num}
@@ -60,7 +70,7 @@ function Form() {
 				onChange={(e) => setDescp(e.target.value)}
 			></input>
 			<button>Add</button>
-		</div>
+		</form>
 	);
 }
 
