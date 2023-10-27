@@ -1,16 +1,20 @@
 import { useState } from 'react';
 
-const initialItems = [
-	{ id: 1, description: 'Passports', quantity: 2, packed: false },
-	{ id: 2, description: 'Socks', quantity: 12, packed: true },
-];
+// const initialItems = [
+// 	{ id: 1, description: 'Passports', quantity: 2, packed: false },
+// 	{ id: 2, description: 'Socks', quantity: 12, packed: true },
+// ];
 
 function App() {
+	const [items, setItems] = useState([]);
+	function handleAddItem(newItem) {
+		setItems((items) => [...items, newItem]);
+	}
 	return (
 		<div className="app">
 			<Logo />
-			<Form />
-			<List />
+			<Form handleAddItem={handleAddItem} />
+			<List items={items} />
 			<Stat />
 		</div>
 	);
@@ -19,7 +23,7 @@ function Logo() {
 	return <h1> 🌴 FAR AWAY 🚗 </h1>;
 }
 
-function Form() {
+function Form({ handleAddItem }) {
 	const [descp, setDescp] = useState('');
 	const [quantity, setQuantity] = useState('1');
 
@@ -35,7 +39,7 @@ function Form() {
 			id: Date.now(),
 		};
 		console.log(newItem); //just to check what we are submitting to form. we can take this out of the form and display in the list. we will learn later.
-
+		handleAddItem(newItem);
 		setDescp('');
 		setQuantity(1);
 	}
@@ -74,11 +78,11 @@ function Form() {
 	);
 }
 
-function List() {
+function List({ items }) {
 	return (
 		<div className="list">
 			<ul>
-				{initialItems.map((item) => (
+				{items.map((item) => (
 					<Item i={item} key={item.id} />
 				))}
 			</ul>
