@@ -49,7 +49,7 @@ function App() {
 				onDelete={handleDeleteItem}
 				onChecked={handleChecked}
 			/>
-			<Stat />
+			<Stat items={items} />
 		</div>
 	);
 }
@@ -72,7 +72,7 @@ function Form({ handleAddItem }) {
 			packed: false,
 			id: Date.now(),
 		};
-		console.log(newItem); //just to check what we are submitting to form. we can take this out of the form and display in the list. we will learn later.
+		// console.log(newItem); //just to check what we are submitting to form. we can take this out of the form and display in the list. we will learn later.
 		handleAddItem(newItem);
 		setDescp('');
 		setQuantity(1);
@@ -146,10 +146,14 @@ function Item({ i, onDelete, onChecked }) {
 	);
 }
 
-function Stat() {
+function Stat({ items }) {
+	const num = items.length;
+	const numPacked = items.filter((item) => item.packed === true).length;
+
 	return (
 		<footer className="stats">
-			You have X items on your list, and you already packed X (X%)
+			You have {num} items on your list, and you already packed{' '}
+			{(numPacked / num) * 100}%
 		</footer>
 	);
 }
