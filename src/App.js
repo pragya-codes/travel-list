@@ -149,11 +149,12 @@ function Item({ i, onDelete, onChecked }) {
 function Stat({ items }) {
 	const num = items.length;
 	const numPacked = items.filter((item) => item.packed === true).length;
-
 	return (
 		<footer className="stats">
-			You have {num} items on your list, and you already packed{' '}
-			{(numPacked / num) * 100}%
+			{numPacked === 0
+				? `You have ${num} items on your list, and you have packed nothing...🙁`
+				: `You have ${num} items on your list, and you have packed 
+				${numPacked} (${Math.round((numPacked / num) * 100)}%) items!😃`}
 		</footer>
 	);
 }
