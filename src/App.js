@@ -10,7 +10,7 @@ const initialItems = [
 	{
 		descp: 'Maggi',
 		quantity: 10,
-		packed: true,
+		packed: false,
 		id: 123,
 	},
 	{
@@ -32,11 +32,23 @@ function App() {
 		setItems((items) => items.filter((item) => item.id !== id));
 	}
 
+	function handleChecked(id) {
+		setItems((items) =>
+			items.map((item) =>
+				item.id !== id ? item : { ...item, packed: !item.packed }
+			)
+		);
+	}
+
 	return (
 		<div className="app">
 			<Logo />
 			<Form handleAddItem={handleAddItem} />
-			<List items={items} onDelete={handleDeleteItem} />
+			<List
+				items={items}
+				onDelete={handleDeleteItem}
+				onChecked={handleChecked}
+			/>
 			<Stat />
 		</div>
 	);
@@ -100,21 +112,31 @@ function Form({ handleAddItem }) {
 	);
 }
 
-function List({ items, onDelete }) {
+function List({ items, onDelete, onChecked }) {
 	return (
 		<div className="list">
 			<ul>
 				{items.map((item) => (
-					<Item i={item} key={item.id} onDelete={onDelete} />
+					<Item
+						i={item}
+						onDelete={onDelete}
+						onChecked={onChecked}
+						key={item.id}
+					/>
 				))}
 			</ul>
 		</div>
 	);
 }
 
-function Item({ i, onDelete }) {
+function Item({ i, onDelete, onChecked }) {
 	return (
 		<li>
+			<input
+				type="checkbox"
+				value={i.packed}
+				onChange={() => onChecked(i.id)}
+			/>
 			<span style={i.packed ? { textDecoration: 'line-through' } : {}}>
 				{i.quantity + ' '}
 				{i.descp}
