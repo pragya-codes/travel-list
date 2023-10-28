@@ -169,7 +169,13 @@ function Item({ i, onDelete, onChecked }) {
 				value={i.packed}
 				onChange={() => onChecked(i.id)}
 			/>
-			<span style={i.packed ? { textDecoration: 'line-through' } : {}}>
+			<span
+				style={
+					i.packed
+						? { textDecoration: 'line-through', opacity: 0.4 }
+						: {}
+				}
+			>
 				{i.quantity + ' '}
 				{i.descp}
 			</span>
