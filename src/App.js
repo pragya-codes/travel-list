@@ -40,6 +40,9 @@ function App() {
 		);
 	}
 
+	function handleClear() {
+		setItems([]);
+	}
 	return (
 		<div className="app">
 			<Logo />
@@ -48,6 +51,7 @@ function App() {
 				items={items}
 				onDelete={handleDeleteItem}
 				onChecked={handleChecked}
+				onClear={handleClear}
 			/>
 			<Stat items={items} />
 		</div>
@@ -88,12 +92,12 @@ function Form({ handleAddItem }) {
 				{/* Array.from takes 2 params -> 1st iterable thing 2nd a cb. 
 				To create an arr of range of numbers:
 				const range = Array.from({ length: 5 }, (_, index) => index + 1); // Generates an array of numbers from 1 to 5: [1, 2, 3, 4, 5]
-				
-				{ length: 5 } is an object, not an array. However, in JavaScript, you can use this object in conjunction with Array.from() to create an array of a specified length. When you pass an object with a length property to Array.from(), it creates a new array with the specified length, and you can also provide a callback function to generate the values for each element in the array. 
+				{ length: 5 } is an object, not an array. However, in JavaScript, you can use this object 
+				in conjunction with Array.from() to create an array of a specified length. When you pass an object with a length property to Array.from(), it creates a new array with the specified 
+				length, and you can also provide a callback function to generate the values for each element in the array. 
 
-				(_, index) is a callback function that's being used inside the Array.from() method. It's a common convention to use an underscore (_) as a placeholder for a parameter you don't intend to use. In this case, you are not using the first parameter (which represents the value of each element), but you are using the second parameter, which represents the index of each element within the array.
-				
-				
+				(_, index) is a callback function that's being used inside the Array.from() method. 
+				It's a common convention to use an underscore (_) as a placeholder for a parameter you don't intend to use. In this case, you are not using the first parameter (which represents the value of each element), but you are using the second parameter, which represents the index of each element within the array.
 */}
 				{Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
 					<option value={num} key={num}>
@@ -112,11 +116,22 @@ function Form({ handleAddItem }) {
 	);
 }
 
-function List({ items, onDelete, onChecked }) {
+function List({ items, onDelete, onChecked, onClear }) {
+	const [sortBy, setSortBy] = useState('packed');
+	let sorted;
+
+	if (sortBy === 'input') sorted = items;
+
+	if (sortBy === 'description')
+		sorted = items.slice().sort((a, b) => a.descp.localeCompare(b.descp));
+
+	if (sortBy === 'packed')
+		sorted = items.slice().sort((a, b) => a.packed - b.packed);
+
 	return (
 		<div className="list">
 			<ul>
-				{items.map((item) => (
+				{sorted.map((item) => (
 					<Item
 						i={item}
 						onDelete={onDelete}
@@ -125,6 +140,23 @@ function List({ items, onDelete, onChecked }) {
 					/>
 				))}
 			</ul>
+			<div className="actions">
+				<select
+					value={sortBy}
+					onChange={(e) => setSortBy(e.target.value)}
+				>
+					<option value="input">Sort by input</option>
+					<option value="packed">Sort by packed items</option>
+					<option value="description">Sort by description</option>
+				</select>
+				<button
+					onClick={() => {
+						onClear(items);
+					}}
+				>
+					CLEAR
+				</button>
+			</div>
 		</div>
 	);
 }
@@ -148,6 +180,7 @@ function Item({ i, onDelete, onChecked }) {
 
 function Stat({ items }) {
 	const num = items.length;
+
 	const numPacked = items.filter((item) => item.packed === true).length;
 	return (
 		<footer className="stats">
